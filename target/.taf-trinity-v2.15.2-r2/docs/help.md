@@ -1,4 +1,4 @@
-taf-trinity 2.15.2-r1
+taf-trinity 2.15.2-r2
 
 Trinity-v2.15.2 for de novo RNA-seq transcriptome assembly.
 The default command runs the upstream Trinity script directly.
@@ -62,6 +62,12 @@ Packaged commands:
 Platform:
   Built from source on Ubuntu 24.04 for linux/amd64 and linux/arm64.
   Trinity jobs can be memory intensive; set --max_memory and --CPU explicitly.
+
+License:
+  TAFFISH app packaging: Apache-2.0.
+  Upstream software: BSD-3-Clause with bundled third-party components including ParaFly, seqtk-trinity, Trimmomatic, collectl, bamsifter/htslib, and Ubuntu-packaged runtime tools.
+  Bundled components, data, models, and external resources keep their
+  own license terms.
 
 Boundaries:
   This image targets the core Trinity de novo assembly path and its key helpers.

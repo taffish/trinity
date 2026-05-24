@@ -1,14 +1,14 @@
 # taf-trinity
 
-`taf-trinity` packages Trinity `2.15.2-r1` for de novo RNA-seq transcriptome assembly.
+`taf-trinity` packages Trinity `2.15.2-r2` for de novo RNA-seq transcriptome assembly.
 
 Package identity:
 
 - name: `trinity`
 - command: `taf-trinity`
 - kind: `tool`
-- TAFFISH version: `2.15.2-r1`
-- container image: `ghcr.io/taffish/trinity:2.15.2-r1`
+- TAFFISH version: `2.15.2-r2`
+- container image: `ghcr.io/taffish/trinity:2.15.2-r2`
 - upstream release: `Trinity-v2.15.2`
 - runtime version string: `Trinity version: Trinity-v2.15.2`
 - source archive: `trinityrnaseq-v2.15.2.FULL.tar.gz`
@@ -111,12 +111,16 @@ Trinity's `--version` command performs an upstream network check when `curl` is 
 
 The image is built from source on Ubuntu 24.04 and is intended for native `linux/amd64` and `linux/arm64` container platforms. Trinity jobs can be memory and CPU intensive; set `--max_memory` and `--CPU` explicitly for reproducible runs.
 
+## License Boundary
+
+The TAFFISH app packaging files are licensed under Apache-2.0. The packaged upstream Trinity software is covered by: BSD-3-Clause with bundled third-party components including ParaFly, seqtk-trinity, Trimmomatic, collectl, bamsifter/htslib, and Ubuntu-packaged runtime tools. Bundled third-party components, datasets, models, and external resources keep their own license terms.
+
 ## Upstream
 
 - Upstream repository: <https://github.com/trinityrnaseq/trinityrnaseq>
 - Upstream release: <https://github.com/trinityrnaseq/trinityrnaseq/releases/tag/Trinity-v2.15.2>
 - Running Trinity manual: <https://github.com/trinityrnaseq/trinityrnaseq/wiki/Running-Trinity>
-- License: BSD-3-Clause for Trinity itself, with additional bundled and Ubuntu-packaged third-party components under their respective licenses.
+- Upstream license: BSD-3-Clause for Trinity itself, with additional bundled and Ubuntu-packaged third-party components under their respective licenses.
 
 Primary citations:
 

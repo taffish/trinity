@@ -2,8 +2,8 @@
 name = "trinity"
 kind = "tool"
 version = "2.15.2"
-release = 1
-license = "BSD-3-Clause"
+release = 2
+license = "Apache-2.0"
 main = "src/main.taf"
 
 [meta]
@@ -23,7 +23,7 @@ pipe = true
 command_mode = true
 
 [container]
-image = "ghcr.io/taffish/trinity:2.15.2-r1"
+image = "ghcr.io/taffish/trinity:2.15.2-r2"
 dockerfile = "docker/Dockerfile"
 build_platforms = "linux/amd64,linux/arm64"
 
@@ -40,7 +40,7 @@ license = "BSD-3-Clause with bundled third-party components including ParaFly, s
 citation = "Grabherr et al. 2011; Haas et al. 2013"
 doi = "10.1038/nbt.1883; 10.1038/nprot.2013.084"
 pmid = "21572440; 23845962"
-watch = "github-releases"
+watch = "tags"
 strip_prefix = "Trinity-v"
 
 [smoke]
