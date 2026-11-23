@@ -1,80 +1,52 @@
-taf-trinity 2.15.2-r2
+taf-trinity 2.16.1-r1
 
-Trinity-v2.15.2 for de novo RNA-seq transcriptome assembly.
-The default command runs the upstream Trinity script directly.
+Assemble RNA-seq reads with upstream Trinity 2.16.1.
 
 Usage:
-  taf-trinity -- --seqType fq --max_memory 50G --left left.fq.gz --right right.fq.gz --CPU 16 --output trinity_out_dir
-  taf-trinity -- --seqType fq --max_memory 20G --single reads.fq.gz --CPU 8 --output trinity_single_out
+  taf-trinity -- --no_version_check --seqType fq --max_memory 20G --left left.fq.gz --right right.fq.gz --CPU 8 --output trinity_paired
+  taf-trinity -- --no_version_check --seqType fq --max_memory 10G --single reads.fq.gz --CPU 4 --output trinity_single
 
-Wrapper options:
-  taf-trinity --help       Show this TAFFISH help.
-  taf-trinity --version    Show the TAFFISH package version.
-  taf-trinity --compile    Print the generated runner.
-  taf-trinity -- --help    Show upstream Trinity help.
-  taf-trinity -- --version Show upstream Trinity version.
+Help and version:
+  taf-trinity --help             This usage help.
+  taf-trinity --version          TAFFISH package version.
+  taf-trinity -- --help          Upstream options (upstream exits nonzero).
+  taf-trinity -- --version       Upstream version; an update-check warning is normal.
 
-Default upstream command:
-  Trinity
+Key options:
+  --seqType fq|fa                FASTQ or FASTA reads; gzip inputs are supported.
+  --left FILES --right FILES     Paired reads; comma-separated lists must match.
+  --single FILES                Single-end reads.
+  --SS_lib_type RF|FR|F|R        Use the library's actual strandedness; omit if unstranded.
+  --CPU N --max_memory SIZE      Set CPU and memory for the job.
+  --output DIR                  Dedicated writable directory containing "trinity".
+  --no_version_check            Disable the assembly's optional update check.
 
-Command mode:
-  taf-trinity Trinity --version
-  taf-trinity TrinityStats.pl trinity_out_dir.Trinity.fasta
-  taf-trinity insilico_read_normalization.pl --help
+Outputs and utilities:
+  Final sequences: trinity_paired.Trinity.fasta (beside the work directory).
+  Transcript mapping: trinity_paired.Trinity.fasta.gene_trans_map.
+  taf-trinity TrinityStats.pl trinity_paired.Trinity.fasta
+  taf-trinity insilico_read_normalization.pl --seqType fq --JM 10G --max_cov 50 --left left.fq.gz --right right.fq.gz --pairs_together --CPU 4 --output trinity_norm
   taf-trinity salmon --version
-  taf-trinity bowtie2 --version
 
-Common Trinity options:
-  --seqType fq|fa          Input read type.
-  --max_memory 50G         Suggested maximum memory for Trinity.
-  --left FILES             Left reads for paired-end data.
-  --right FILES            Right reads for paired-end data.
-  --single FILES           Single-end reads.
-  --samples_file FILE      Tab-delimited sample file.
-  --SS_lib_type STR        Strand-specific library type.
-  --CPU N                  Number of worker threads.
-  --output DIR             Output directory; Trinity requires "trinity" in the basename.
-  --no_normalize_reads     Skip in-silico read normalization.
-  --no_salmon              Skip final Salmon expression filtering.
-  --genome_guided_bam BAM  Use genome-guided mode from a coordinate-sorted BAM.
+Optional shared reads (replace /srv/rnaseq/reads; run from a writable project):
+  Docker:
+    TAFFISH_CONTAINER_BACKEND=docker TAFFISH_DOCKER_RUN_ARGS='-v /srv/rnaseq/reads:/reads:ro' taf-trinity -- --no_version_check --seqType fq --max_memory 1G --single /reads/left.fq --CPU 1 --output trinity_shared
+  Podman:
+    TAFFISH_CONTAINER_BACKEND=podman TAFFISH_PODMAN_RUN_ARGS='-v /srv/rnaseq/reads:/reads:ro' taf-trinity -- --no_version_check --seqType fq --max_memory 1G --single /reads/left.fq --CPU 1 --output trinity_shared
+  Apptainer:
+    TAFFISH_CONTAINER_BACKEND=apptainer TAFFISH_APPTAINER_RUN_ARGS='--bind /srv/rnaseq/reads:/reads:ro' taf-trinity -- --no_version_check --seqType fq --max_memory 1G --single /reads/left.fq --CPU 1 --output trinity_shared
+  Increase CPU/memory for your data. Inputs stay read-only; outputs stay in the project.
 
-Common workflows:
-  Paired-end assembly:
-    taf-trinity -- --seqType fq --max_memory 50G --left left.fq.gz --right right.fq.gz --CPU 16 --output trinity_paired_out
-
-  Single-end assembly:
-    taf-trinity -- --seqType fq --max_memory 20G --single reads.fq.gz --CPU 8 --output trinity_single_out
-
-  Trinity assembly statistics:
-    taf-trinity TrinityStats.pl trinity_paired_out.Trinity.fasta
-
-  In-silico normalization:
-    taf-trinity insilico_read_normalization.pl --seqType fq --JM 20G --left left.fq.gz --right right.fq.gz --pairs_together --CPU 8 --output trinity_norm
-
-Packaged commands:
-  Trinity, TrinityStats.pl, align_and_estimate_abundance.pl,
-  abundance_estimates_to_matrix.pl, insilico_read_normalization.pl,
-  ParaFly, seqtk-trinity, inchworm, Chrysalis, QuantifyGraph,
-  GraphFromFasta, ReadsToTranscripts, bamsifter, slclust, collectl,
-  bowtie2, bowtie2-build, jellyfish, samtools, salmon, blastn,
-  makeblastdb, java, perl, python3.
-
-Platform:
-  Built from source on Ubuntu 24.04 for linux/amd64 and linux/arm64.
-  Trinity jobs can be memory intensive; set --max_memory and --CPU explicitly.
-
-License:
-  TAFFISH app packaging: Apache-2.0.
-  Upstream software: BSD-3-Clause with bundled third-party components including ParaFly, seqtk-trinity, Trimmomatic, collectl, bamsifter/htslib, and Ubuntu-packaged runtime tools.
-  Bundled components, data, models, and external resources keep their
-  own license terms.
-
-Boundaries:
-  This image targets the core Trinity de novo assembly path and its key helpers.
-  It does not bundle the full upstream Docker image's heavy downstream analysis
-  stack: R/Bioconductor packages, RSEM, kallisto, eXpress, STAR, HISAT2, GMAP,
-  BLAT, Picard/GATK, FastQC, MultiQC, and plotting/reporting workflows are
-  user-supplied or should be handled by separate TAFFISH apps/workflows.
-  Salmon-based abundance utilities are available because Salmon is bundled.
-  Trinity --version prints Trinity-v2.15.2 and may also note that the optional
-  upstream network version check could not run in this offline-style container.
+Before running:
+  Use file inputs, not stdin. Keep analysis/input/output paths free of spaces
+  and shell metacharacters; quoting cannot repair upstream internal shell commands.
+  Keep reads in the working tree or explicitly bind their parent directory.
+  No production database download is needed; indexes and checkpoints belong
+  to the writable project output, not the image or a shared reference directory.
+  Normalization and Salmon 1.10.2 final filtering are enabled by default.
+  Check logs for filtering failures even if Trinity returns success.
+  Reuse a work directory only with identical inputs/options; otherwise use a new one.
+  Avoid --full_cleanup if you need intermediate files for recovery.
+  R/Bioconductor, differential-expression reports and independent viewers are
+  not included. For abundance matrices use --cross_sample_norm none.
+  Resource binding, downstream boundaries and licenses are described in README.
