@@ -9,7 +9,7 @@ import sys
 import tempfile
 
 ROOT = Path('/opt/trinity')
-VERSION = 'Trinity version: Trinity-v2.16.1'
+VERSION = 'Trinity version: Trinity-v2.16.3'
 VERSION_WARNING = "-ERROR: couldn't run the network check to confirm latest Trinity software version."
 TOOLS = 'Trinity TrinityStats.pl align_and_estimate_abundance.pl abundance_estimates_to_matrix.pl insilico_read_normalization.pl ParaFly seqtk-trinity inchworm Chrysalis QuantifyGraph GraphFromFasta ReadsToTranscripts bamsifter slclust collectl bowtie2 bowtie2-build jellyfish samtools salmon blastn makeblastdb java perl python3 bash gzip bzip2 xz'.split()
 BINARIES = ['Inchworm/bin/inchworm', 'Chrysalis/bin/Chrysalis',
@@ -43,11 +43,14 @@ def identity():
     assert not shutil.which('curl'), 'Unexpected curl enables upstream network version checks'
     assert version_ok(run(['Trinity', '--version'])), 'Incorrect runtime identity'
     for relative, checksum in {
-        'Trinity': '4b6ef7a2925f2d3372f4d457183b4b6c563638e770636ea1e5f896c80625457a',
+        'Trinity': 'afcdeec4726457a3708e54bea5133d857c55d0b2f3638d1128bbc845236e1b96',
         'Butterfly/Butterfly.jar': '4293c8bcb6d861d9b8409c410d3aa9de77de567119d8743a555038528ece73bb',
+        'util/support_scripts/salmon_runner.pl': 'ab6c386e4aa9453d9063ce0f46f7a6a5c9676623ec9dab107793d4741b75c92b',
     }.items():
         assert hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() == checksum
-    assert run(['salmon', '--version']).stdout.strip() == 'salmon 1.10.2'
+    assert run(['salmon', '--version']).stdout.strip() == 'salmon 2.12.0'
+    salmon_linkage = run(['ldd', '/opt/salmon/salmon'])
+    assert 'not found' not in salmon_linkage.stdout + salmon_linkage.stderr
     assert run(['samtools', '--version']).stdout.splitlines()[0] == 'samtools 1.19.2'
     assert run(['jellyfish', '--version']).stdout.strip() == 'jellyfish 2.3.1'
     assert 'version 2.5.2' in run(['bowtie2', '--version']).stdout
@@ -120,6 +123,7 @@ def assembly():
                   '--left=left.fq', '--right=right.fq', '--CPU=1', '--output', 'trinity_out'])
     text = result.stdout + result.stderr
     assert 'salmon-based expression filtering of the final assembly failed' not in text
+    assert 'salmon_runner.pl' in text
     output = Path('trinity_out.Trinity.fasta')
     assert output.stat().st_size > 600 and '>TRINITY_' in output.read_text()
     assert Path(str(output)+'.gene_trans_map').stat().st_size > 0
@@ -166,6 +170,19 @@ def matrix():
     assert text.splitlines() == ['\tsample_b\tsample_a', 'tx_a\t2\t3', 'tx_z\t2\t3']
     missing = subprocess.run(['abundance_estimates_to_matrix.pl', '--est_method'], text=True, capture_output=True)
     assert missing.returncode != 0 and not Path('salmon.isoform.counts.matrix').exists()
+    original = Path('matrix.isoform.counts.matrix').read_bytes()
+    Path('sample_a/quant.sf').write_text('Name\tLength\tEffectiveLength\tTPM\tNumReads\n'
+                                       'different_tx\t100\t80\t1000000\t3\n')
+    mismatch = subprocess.run(['abundance_estimates_to_matrix.pl', '--est_method', 'salmon',
+                              '--cross_sample_norm', 'none', '--gene_trans_map', 'none', '--name_sample_by_basedir',
+                              '--out_prefix', 'mismatch', 'sample_b/quant.sf', 'sample_a/quant.sf'],
+                             text=True, capture_output=True, timeout=30)
+    sys.stdout.write(mismatch.stdout)
+    sys.stderr.write(mismatch.stderr)
+    assert mismatch.returncode != 0
+    assert 'not all quantification files report the same set of features' in mismatch.stderr
+    assert Path('matrix.isoform.counts.matrix').read_bytes() == original
+    assert all(p.stat().st_size == 0 for p in Path('.').glob('mismatch.*.matrix'))
     print('TRINITY_MATRIX_PASS')
 
 

@@ -1,16 +1,10 @@
 [package]
 name = "trinity"
 kind = "tool"
-version = "2.16.1"
+version = "2.16.3"
 release = 1
 license = "Apache-2.0"
 main = "src/main.taf"
-
-[meta]
-domain = "bio"
-categories = ["rna-seq", "transcriptomics", "de-novo-assembly", "transcript-assembly", "short-read"]
-keywords = ["Trinity", "RNA-seq", "transcriptome assembly", "Inchworm", "Chrysalis", "Butterfly", "insilico normalization", "Salmon", "Jellyfish", "Bowtie2"]
-description = "Trinity de novo RNA-seq assembly, in-silico normalization, and compatible Salmon 1.x final filtering."
 
 [repository]
 url = "https://github.com/taffish/trinity"
@@ -23,9 +17,15 @@ pipe = true
 command_mode = true
 
 [container]
-image = "ghcr.io/taffish/trinity:2.16.1-r1"
+image = "ghcr.io/taffish/trinity:2.16.3-r1"
 dockerfile = "docker/Dockerfile"
 build_platforms = "linux/amd64,linux/arm64"
+
+[meta]
+domain = "bio"
+categories = ["rna-seq", "transcriptomics", "de-novo-assembly", "transcript-assembly", "short-read"]
+keywords = ["Trinity", "RNA-seq", "transcriptome assembly", "Inchworm", "Chrysalis", "Butterfly", "insilico normalization", "Salmon", "Jellyfish", "Bowtie2"]
+description = "Trinity de novo RNA-seq assembly, in-silico normalization, and compatible Salmon 2.x final filtering."
 
 [upstream]
 name = "Trinity"
@@ -33,11 +33,11 @@ type = "github"
 repo = "trinityrnaseq/trinityrnaseq"
 homepage = "https://github.com/trinityrnaseq/trinityrnaseq/wiki"
 manual = "https://github.com/trinityrnaseq/trinityrnaseq/wiki/Running-Trinity"
-release_url = "https://github.com/trinityrnaseq/trinityrnaseq/releases/tag/Trinity-v2.16.1"
-downloads = "https://github.com/trinityrnaseq/trinityrnaseq/releases/download/Trinity-v2.16.1/trinityrnaseq-v2.16.1.FULL.tar.gz"
-version = "2.16.1"
+release_url = "https://github.com/trinityrnaseq/trinityrnaseq/releases/tag/Trinity-v2.16.3"
+downloads = "https://github.com/trinityrnaseq/trinityrnaseq/releases/download/Trinity-v2.16.3/trinityrnaseq-v2.16.3.FULL.tar.gz"
+version = "2.16.3"
 license = "BSD-3-Clause with bundled third-party components including ParaFly, seqtk-trinity, Trimmomatic, collectl, bamsifter/htslib, and Ubuntu-packaged runtime tools"
-commit = "815ce3f22869e12411babe6bd60b347c6327b084"
+commit = "d30a36be9cd21697ec2abcc2744a01096ff6fc0a"
 citation = "Grabherr et al. 2011; Haas et al. 2013"
 doi = "10.1038/nbt.1883; 10.1038/nprot.2013.084"
 pmid = "21572440; 23845962"
@@ -47,5 +47,5 @@ strip_prefix = "Trinity-v"
 [smoke]
 backend = "docker"
 timeout = 900
-exist = ["Trinity", "TrinityStats.pl", "align_and_estimate_abundance.pl", "abundance_estimates_to_matrix.pl", "insilico_read_normalization.pl", "ParaFly", "seqtk-trinity", "inchworm", "Chrysalis", "QuantifyGraph", "GraphFromFasta", "ReadsToTranscripts", "bamsifter", "slclust", "collectl", "bowtie2", "bowtie2-build", "jellyfish", "samtools", "salmon", "blastn", "makeblastdb", "java", "perl", "python3", "bash", "gzip", "bzip2", "xz", "grep", "ldd"]
+exist = ["Trinity", "TrinityStats.pl", "align_and_estimate_abundance.pl", "abundance_estimates_to_matrix.pl", "insilico_read_normalization.pl", "ParaFly", "seqtk-trinity", "inchworm", "Chrysalis", "QuantifyGraph", "GraphFromFasta", "ReadsToTranscripts", "bamsifter", "slclust", "collectl", "bowtie2", "bowtie2-build", "jellyfish", "samtools", "salmon", "blastn", "makeblastdb", "java", "perl", "python3", "bash", "gzip", "bzip2", "xz", "grep", "ldd", "sort", "sed", "awk", "cat", "mkdir", "rm", "cp", "mv", "touch", "head", "tail", "cut"]
 test = ["python3 /usr/local/libexec/trinity-check.py identity", "python3 /usr/local/libexec/trinity-check.py help", "python3 /usr/local/libexec/trinity-check.py stats", "python3 /usr/local/libexec/trinity-check.py normalize", "python3 /usr/local/libexec/trinity-check.py assembly", "python3 /usr/local/libexec/trinity-check.py checkpoint", "python3 /usr/local/libexec/trinity-check.py matrix"]

@@ -1,6 +1,6 @@
-taf-trinity 2.16.1-r1
+taf-trinity 2.16.3-r1
 
-Assemble RNA-seq reads with upstream Trinity 2.16.1.
+Assemble RNA-seq reads with upstream Trinity 2.16.3.
 
 Usage:
   taf-trinity -- --no_version_check --seqType fq --max_memory 20G --left left.fq.gz --right right.fq.gz --CPU 8 --output trinity_paired
@@ -43,7 +43,9 @@ Before running:
   Keep reads in the working tree or explicitly bind their parent directory.
   No production database download is needed; indexes and checkpoints belong
   to the writable project output, not the image or a shared reference directory.
-  Normalization and Salmon 1.10.2 final filtering are enabled by default.
+  Normalization and Salmon 2.12.0 final filtering are enabled by default.
+  Salmon 1.x indexes are incompatible; rebuild from the same transcript FASTA
+  in a new writable project. Do not delete or overwrite a shared old index.
   Check logs for filtering failures even if Trinity returns success.
   Reuse a work directory only with identical inputs/options; otherwise use a new one.
   Avoid --full_cleanup if you need intermediate files for recovery.
