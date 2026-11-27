@@ -1,11 +1,12 @@
 # taf-trinity
 
-Trinity **2.16.3-r1** packages the official FULL source for de novo RNA-seq assembly.
+Trinity **2.16.5-r1** packages the official FULL source for de novo RNA-seq assembly.
 The default command invokes upstream `Trinity` without an algorithm patch.
 
 ## Quick start
 
-Run from a writable project directory with enough memory and scratch space:
+Install with `taf install trinity`, then run from a writable project directory
+with enough memory and scratch space:
 
 ```sh
 taf-trinity -- --no_version_check --seqType fq --max_memory 20G \
@@ -116,6 +117,13 @@ Trinity can warn and retain an unfiltered assembly when Salmon filtering fails,
 while still returning success. Inspect the log and `salmon_outdir/quant.sf`;
 do not interpret a zero exit code alone as successful expression filtering.
 
+Optional `--trimmomatic` runs the bundled Trimmomatic 0.40 before assembly.
+Its default quality-encoding detection can reject ambiguous FASTQ qualities
+(for example, synthetic reads with only `I` qualities). Preserve the failure log
+and confirm the input encoding before preparing trimmed inputs separately;
+do not change real quality scores just to make detection pass. Use a new output
+directory whenever the input preparation changes.
+
 ## Normalization and abundance utilities
 
 ```sh
@@ -142,7 +150,7 @@ cannot truncate previously produced matrices.
 ## Included components and boundaries
 
 Included: Inchworm, Chrysalis, Butterfly, core Perl/Python utilities, ParaFly,
-seqtk-trinity, bamsifter with bundled static HTSlib, slclust, collectl, Trimmomatic,
+seqtk-trinity, bamsifter with bundled static HTSlib, slclust, collectl, Trimmomatic 0.40,
 Java, NumPy, Jellyfish 2.3.1, Bowtie2 2.5.2, Samtools 1.19.2, BLAST+ and Salmon 2.12.0.
 The former ARM64/bamsifter packaging edits are no longer needed: official
 source contains the fixes. No upstream source or scientific algorithm is patched.
@@ -163,9 +171,9 @@ tools; their full workflows are not implied by the core CLI scope.
 
 ## Build identity and maintenance
 
-- Image: `ghcr.io/taffish/trinity:2.16.3-r1`; native `linux/amd64` and `linux/arm64`.
-- Official tag: `Trinity-v2.16.3`, commit `d30a36be9cd21697ec2abcc2744a01096ff6fc0a`.
-- FULL SHA256: `4d6db75052bbedf1cc01967ba4418f37fd5a895bfb4145d747bc396b1ac951d3`.
+- Image: `ghcr.io/taffish/trinity:2.16.5-r1`; native `linux/amd64` and `linux/arm64`.
+- Official tag: `Trinity-v2.16.5`, commit `98b3b95b15d5ed7efa8e3c1ce764674c12c81fb0`.
+- FULL SHA256: `a58b2f9a0c74f6a6b904e7eedbb1ab23302156782c7f54a319d67a5a1c234a5c`.
 - Unmodified official Salmon 2.12.0 binaries: amd64 archive SHA256
   `44f02f8cca063f68ffd978e948912e942716f37cb59acbce85de39e1e1f38f95`,
   ARM64 archive SHA256 `c7d10d11a6246c8d33a25e28ad0848485338ba45576b2e94374a8efd62334e19`.
@@ -179,29 +187,33 @@ tools; their full workflows are not implied by the core CLI scope.
 
 ## Packaging validation
 
-On 2026-11-24, native ARM64 Docker/Podman and xjp native amd64
-Docker/Podman/Apptainer passed current-candidate validation. Each of the 51 exact
-manifest checks ran independently offline; Docker/Podman also passed ordinary-user,
-cap-drop-all, read-only-root checks. Apptainer used a real read-only SIF from the
-same candidate OCI image. Real wrappers verified default paired/single-end assembly,
-normalization, nonzero Salmon assignment, matrices, shared reads and output ownership.
-Legacy/partial indexes, unreadable parents, dangling references, recovery in a new
-project and unchanged-input idempotence were checked without deleting old resources.
-Empty-output recovery and synthetic Pipeliner-stage interruption were also tested;
-this is not full production assembly interruption or scientific accuracy validation.
-Inspected image sizes are 684.78 MiB (ARM64) and 670.54 MiB (amd64), not compressed
-download sizes. Publication, subsequent Action builds and Index ingestion remain
-separate maintainer actions. Release notes describe the complete validation scope.
+The 2.16.5 candidate passed fresh native ARM64 Docker/Podman and xjp native
+amd64 Docker/Podman/Apptainer checks, including the actual generated wrapper.
+Synthetic tests cover default paired/single-end assembly, normalization, nonzero
+Salmon assignment, Trimmomatic integration, shared read-only inputs, ordinary-user
+outputs, failure recovery and repeat-run behavior. ParaFly interruption and FASTA
+preamble/BOM handling are also covered. These are packaging checks, not full
+production scientific validation.
+
+Final image inspect sizes are 728,486,489 bytes (694.74 MiB) for ARM64 and
+713,552,664 bytes (680.50 MiB) for amd64. Build tools, APT caches and compiled
+build-tree intermediates are absent; official source helpers, examples, jars and
+license notices remain. Publication, subsequent Action builds and Index ingestion
+are separate maintainer actions.
 
 ## Licenses and citations
 
 TAFFISH packaging is Apache-2.0. Trinity is BSD-3-Clause; bundled plugins and
 Ubuntu packages retain their own licenses. The included Salmon 2.12.0 release
 uses BSD-3-Clause; its license is preserved at `/opt/salmon/LICENSE`.
-Trimmomatic and collectl retain their GPL terms. Upstream license files and system package copyright notices
-remain in the image. This is not an Apache-only redistribution of all components.
+Trimmomatic and collectl retain their GPL terms. Trimmomatic 0.40's license notice
+separately identifies its bundled Illumina adapter sequences as Illumina-copyrighted,
+used by upstream with permission and excluded from the software's GPL license.
+That notice remains at `/opt/trinity/trinity-plugins/Trimmomatic/LICENSE`.
+Upstream license files and system package copyright notices remain in the image.
+This is not an Apache-only redistribution of all components or adapter sequences.
 
-- [Official release](https://github.com/trinityrnaseq/trinityrnaseq/releases/tag/Trinity-v2.16.3)
+- [Official release](https://github.com/trinityrnaseq/trinityrnaseq/releases/tag/Trinity-v2.16.5)
 - [Running Trinity](https://github.com/trinityrnaseq/trinityrnaseq/wiki/Running-Trinity)
 - Grabherr et al. 2011: DOI `10.1038/nbt.1883`, PMID `21572440`.
 - Haas et al. 2013: DOI `10.1038/nprot.2013.084`, PMID `23845962`.

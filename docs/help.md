@@ -1,6 +1,6 @@
-taf-trinity 2.16.3-r1
+taf-trinity 2.16.5-r1
 
-Assemble RNA-seq reads with upstream Trinity 2.16.3.
+Assemble RNA-seq reads with upstream Trinity 2.16.5.
 
 Usage:
   taf-trinity -- --no_version_check --seqType fq --max_memory 20G --left left.fq.gz --right right.fq.gz --CPU 8 --output trinity_paired
@@ -20,6 +20,7 @@ Key options:
   --CPU N --max_memory SIZE      Set CPU and memory for the job.
   --output DIR                  Dedicated writable directory containing "trinity".
   --no_version_check            Disable the assembly's optional update check.
+  --trimmomatic                 Optional read trimming before assembly (0.40).
 
 Outputs and utilities:
   Final sequences: trinity_paired.Trinity.fasta (beside the work directory).
@@ -51,4 +52,4 @@ Before running:
   Avoid --full_cleanup if you need intermediate files for recovery.
   R/Bioconductor, differential-expression reports and independent viewers are
   not included. For abundance matrices use --cross_sample_norm none.
-  Resource binding, downstream boundaries and licenses are described in README.
+  More usage and resource details: https://github.com/taffish/trinity#readme

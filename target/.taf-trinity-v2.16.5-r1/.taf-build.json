@@ -1,0 +1,6 @@
+{
+  "artifact": "taf-trinity-v2.16.5-r1",
+  "schema": "taffish.build/v1",
+  "source_sha256": "91d9cf0debbec05486db09e5774f9acfb3196129cb3b1e0d6c7251fe6ea2f296",
+  "wrapper_sha256": "9ba9b16259828070d7732bc7b7b7665b429c6587e25e76c13160c22cb5b9d249"
+}

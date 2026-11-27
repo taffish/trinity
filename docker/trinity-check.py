@@ -9,7 +9,7 @@ import sys
 import tempfile
 
 ROOT = Path('/opt/trinity')
-VERSION = 'Trinity version: Trinity-v2.16.3'
+VERSION = 'Trinity version: Trinity-v2.16.5'
 VERSION_WARNING = "-ERROR: couldn't run the network check to confirm latest Trinity software version."
 TOOLS = 'Trinity TrinityStats.pl align_and_estimate_abundance.pl abundance_estimates_to_matrix.pl insilico_read_normalization.pl ParaFly seqtk-trinity inchworm Chrysalis QuantifyGraph GraphFromFasta ReadsToTranscripts bamsifter slclust collectl bowtie2 bowtie2-build jellyfish samtools salmon blastn makeblastdb java perl python3 bash gzip bzip2 xz'.split()
 BINARIES = ['Inchworm/bin/inchworm', 'Chrysalis/bin/Chrysalis',
@@ -43,7 +43,7 @@ def identity():
     assert not shutil.which('curl'), 'Unexpected curl enables upstream network version checks'
     assert version_ok(run(['Trinity', '--version'])), 'Incorrect runtime identity'
     for relative, checksum in {
-        'Trinity': 'afcdeec4726457a3708e54bea5133d857c55d0b2f3638d1128bbc845236e1b96',
+        'Trinity': '7b21ffe45a692e4f27d0138027d3975af4ee909bd6a522f3fb4f5baddd16839d',
         'Butterfly/Butterfly.jar': '4293c8bcb6d861d9b8409c410d3aa9de77de567119d8743a555038528ece73bb',
         'util/support_scripts/salmon_runner.pl': 'ab6c386e4aa9453d9063ce0f46f7a6a5c9676623ec9dab107793d4741b75c92b',
     }.items():
@@ -55,6 +55,7 @@ def identity():
     assert run(['jellyfish', '--version']).stdout.strip() == 'jellyfish 2.3.1'
     assert 'version 2.5.2' in run(['bowtie2', '--version']).stdout
     run(['java', '-version'])
+    assert run(['java', '-jar', ROOT/'trinity-plugins/Trimmomatic/trimmomatic.jar', '-version']).stdout.strip() == '0.40'
     run(['perl', '-MDB_File', '-MURI::Escape', '-e1'])
     run(['python3', '-c', 'import numpy'])
     for tool in TOOLS:

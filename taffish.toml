@@ -1,7 +1,7 @@
 [package]
 name = "trinity"
 kind = "tool"
-version = "2.16.3"
+version = "2.16.5"
 release = 1
 license = "Apache-2.0"
 main = "src/main.taf"
@@ -17,7 +17,7 @@ pipe = true
 command_mode = true
 
 [container]
-image = "ghcr.io/taffish/trinity:2.16.3-r1"
+image = "ghcr.io/taffish/trinity:2.16.5-r1"
 dockerfile = "docker/Dockerfile"
 build_platforms = "linux/amd64,linux/arm64"
 
@@ -33,11 +33,11 @@ type = "github"
 repo = "trinityrnaseq/trinityrnaseq"
 homepage = "https://github.com/trinityrnaseq/trinityrnaseq/wiki"
 manual = "https://github.com/trinityrnaseq/trinityrnaseq/wiki/Running-Trinity"
-release_url = "https://github.com/trinityrnaseq/trinityrnaseq/releases/tag/Trinity-v2.16.3"
-downloads = "https://github.com/trinityrnaseq/trinityrnaseq/releases/download/Trinity-v2.16.3/trinityrnaseq-v2.16.3.FULL.tar.gz"
-version = "2.16.3"
+release_url = "https://github.com/trinityrnaseq/trinityrnaseq/releases/tag/Trinity-v2.16.5"
+downloads = "https://github.com/trinityrnaseq/trinityrnaseq/releases/download/Trinity-v2.16.5/trinityrnaseq-v2.16.5.FULL.tar.gz"
+version = "2.16.5"
 license = "BSD-3-Clause with bundled third-party components including ParaFly, seqtk-trinity, Trimmomatic, collectl, bamsifter/htslib, and Ubuntu-packaged runtime tools"
-commit = "d30a36be9cd21697ec2abcc2744a01096ff6fc0a"
+commit = "98b3b95b15d5ed7efa8e3c1ce764674c12c81fb0"
 citation = "Grabherr et al. 2011; Haas et al. 2013"
 doi = "10.1038/nbt.1883; 10.1038/nprot.2013.084"
 pmid = "21572440; 23845962"
